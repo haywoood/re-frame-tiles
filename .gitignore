@@ -1,0 +1,9 @@
+/*.log
+/target
+/*-init.clj
+/resources/public/js/compiled
+out
+mosaic.iml
+.idea/
+.git
+figwheel_server.log
