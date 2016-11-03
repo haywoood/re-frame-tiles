@@ -1,0 +1,15 @@
+body {
+  font-family: arial;
+}
+
+.Toolbar-link {
+  color: #0469bd;
+  align-self: flex-end;
+  cursor: pointer;
+  font-size: 1em;
+  letter-spacing: .07em;
+}
+
+.Toolbar-link:hover {
+  color: #64c7cc;
+}

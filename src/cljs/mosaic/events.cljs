@@ -1,6 +1,6 @@
 (ns mosaic.events
     (:require [re-frame.core :as re-frame]
-              [mosaic.db :refer [default-db]]))
+              [mosaic.db :refer [default-db default-board]]))
 
 (defn toggle-dragging [db]
   (update db :is-dragging not))
@@ -24,6 +24,9 @@
         new-tile (update-tile tile @selected)
         new-db   (assoc-in db [:tiles id] new-tile)]
     (toggle-dragging new-db)))
+
+(re-frame/reg-event-db :clear-board
+  (fn [db _] (assoc db :tiles default-board)))
 
 (re-frame/reg-event-db :initialize-db
   (fn [_ _] default-db))

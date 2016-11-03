@@ -29,13 +29,15 @@
         tile (merge opts {:id id})]
     (assoc acc id tile)))
 
-
 (defn gen-board [x y]
-  (reduce (fn [acc _] (make-tile acc default-tile))
-          {}
-          (take (* x y) (range))))
+  (reduce
+   (fn [acc _] (make-tile acc default-tile))
+   {}
+   (take (* x y) (range))))
 
-(def default-db {:tiles (gen-board 23 17)
+(def default-board (gen-board 23 17))
+
+(def default-db {:tiles default-board
                  :selected nil
                  :is-dragging false
                  :legend (reduce make-tile {} colors)

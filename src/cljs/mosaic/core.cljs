@@ -5,14 +5,13 @@
               [mosaic.subs]
               [mosaic.views :as views]))
 
-
 (defn dev-setup []
   (enable-console-print!)
   (println "dev mode"))
 
 (defn mount-root []
   (reagent/render [views/main-panel]
-                  (.getElementById js/document "app")))
+                  (.getElementById js/document "mosaic-app")))
 
 (defn ^:export init []
   (re-frame/dispatch-sync [:initialize-db])

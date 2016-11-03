@@ -18,9 +18,7 @@
   :profiles
   {:dev
    {:dependencies [[binaryage/devtools "0.8.2"]]
-
-    :plugins      [[lein-figwheel "0.5.7"]]
-    }}
+    :plugins      [[lein-figwheel "0.5.7"]]}}
 
   :cljsbuild
   {:builds
@@ -33,18 +31,12 @@
                     :asset-path           "js/compiled/out"
                     :source-map-timestamp true
                     :preloads             [devtools.preload]
-                    :external-config      {:devtools/config {:features-to-install :all}}
-                    }}
+                    :external-config      {:devtools/config {:features-to-install :all}}}}
 
     {:id           "min"
      :source-paths ["src/cljs"]
      :compiler     {:main            mosaic.core
-                    :output-to       "resources/public/js/compiled/app.js"
+                    :output-to       "resources/public/js/fuck/app.js"
                     :optimizations   :advanced
                     :closure-defines {goog.DEBUG false}
-                    :pretty-print    false}}
-
-
-    ]}
-
-  )
+                    :pretty-print    false}}]})
