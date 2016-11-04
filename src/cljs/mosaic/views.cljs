@@ -62,6 +62,9 @@
       [:div {:style {:display "flex" :flex 1}}
         [tile @selected-tile]]
       [:div {:class "Toolbar-link"
+             :onClick #(re-frame/dispatch [:save-board])}
+         "save"]
+      [:div {:class "Toolbar-link"
              :onClick #(re-frame/dispatch-sync [:clear-board])}
         "clear"]]))
 

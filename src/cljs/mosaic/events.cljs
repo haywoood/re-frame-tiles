@@ -1,6 +1,22 @@
 (ns mosaic.events
     (:require [re-frame.core :as re-frame]
-              [mosaic.db :refer [default-db default-board]]))
+              [mosaic.db :refer [default-db default-board]]
+              [hodgepodge.core :as hp]))
+
+(re-frame/reg-fx
+  :set-local-storage
+  (fn [{:keys [key update-fn]}]
+    (assoc! hp/local-storage key (update-fn hp/local-storage))))
+
+(re-frame/reg-event-fx
+  :save-board
+  (fn [world [_]]
+    (let [board-name (js/prompt "input a board name")
+          board (get-in world [:db :tiles])]
+      {:set-local-storage
+        {:key :boards
+         :update-fn #(let [boards (or (:boards %) [])]
+                      (conj boards {:name board-name :board board}))}})))
 
 (defn toggle-dragging [db]
   (update db :is-dragging not))
