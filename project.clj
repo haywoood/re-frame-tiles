@@ -4,6 +4,7 @@
                  [reagent "0.6.0"]
                  [re-frame "0.8.0"]
                  [hodgepodge "0.1.3"]
+                 [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [figwheel-sidecar "0.5.0"]]
 
   :plugins [[lein-cljsbuild "1.1.4"]]

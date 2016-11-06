@@ -59,25 +59,39 @@
 (defn toolbar []
   (let [selected-tile (re-frame/subscribe [:selected-tile])]
     [:div {:style {:display "flex" :width BOARD_WIDTH}}
-      [:div {:style {:display "flex" :flex 1}}
-        [tile @selected-tile]]
-      [:div {:class "Toolbar-link"
-             :onClick #(re-frame/dispatch [:save-board])}
-         "save"]
-      [:div {:class "Toolbar-link"
-             :onClick #(re-frame/dispatch-sync [:clear-board])}
-        "clear"]]))
+        [:div {:style {:display "flex" :flex 1}}
+          [tile @selected-tile]]
+        [:div {:class "Toolbar-link"
+               :onClick #(re-frame/dispatch [:save-board])}
+           "save"]
+        [:div {:class "Toolbar-link"
+               :onClick #(re-frame/dispatch-sync [:clear-board])}
+          "clear"]]))
+
+(defn saved-boards []
+  (let [boards (re-frame/subscribe [:saved-boards])]
+    (fn []
+      [:div (map
+             (fn [{:keys [id name board]}]
+               ^{:key id}
+               [:div name
+                 [:div {:onClick #(re-frame/dispatch [:delete-saved-board id])
+                        :style {:color "red"}}
+                   "x"]])
+             @boards)])))
 
 
 
 (defn spacer [amount] [:div {:style {:height amount}}])
 
 (defn main-panel []
-  [:div {:style {:display "flex" :flexDirection "column" :flex 1
-                 :alignItems "center"}}
-    [spacer 20]
-    [toolbar]
-    [spacer 5]
-    [board]
-    [spacer 20]
-    [legend]])
+  (let [clear-interval 1];(js/setInterval #(re-frame/dispatch [:save-state]) 1000)]
+    [:div {:style {:display "flex" :flexDirection "column" :flex 1
+                   :alignItems "center"}}
+     [spacer 20]
+     [toolbar]
+     [spacer 5]
+     [board]
+     [spacer 20]
+     [legend]
+     [saved-boards]]))

@@ -1,7 +1,6 @@
 (ns mosaic.db
-  (:require [re-frame.core :as re-frame]))
-
-(def id (atom 0))
+  (:require [re-frame.core :as re-frame]
+            [cljs-uuid-utils.core :as uuid]))
 
 (def colors [{:background-color "#444"    :color "white"}
              {:background-color "blue"    :color "white"}
@@ -25,7 +24,7 @@
 (def default-tile {:color "red" :background-color "white"})
 
 (defn make-tile [acc opts]
-  (let [id (swap! id inc)
+  (let [id (uuid/make-random-uuid)
         tile (merge opts {:id id})]
     (assoc acc id tile)))
 
@@ -37,8 +36,13 @@
 
 (def default-board (gen-board 23 17))
 
+(defn get-selected-legend-tile
+  [{:keys [legend selected-tile]}]
+  (or selected-tile (first (vals legend))))
+
 (def default-db {:tiles default-board
-                 :selected nil
+                 :selected-tile nil
+                 :local-storage (.getTime (js/Date.))
                  :is-dragging false
-                 :legend (reduce make-tile {} colors)
-                 :id 0})
+                 :saved-boards {}
+                 :legend (reduce make-tile {} colors)})

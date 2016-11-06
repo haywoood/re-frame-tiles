@@ -1,28 +1,9 @@
 (ns mosaic.subs
-    (:require-macros [reagent.ratom :refer [reaction]])
-    (:require [re-frame.core :as re-frame]))
+  (:require [re-frame.core :as re-frame]
+            [mosaic.db :refer [get-selected-legend-tile]]))
 
-(re-frame/reg-sub
- :next-id
- (fn [db]
-   (inc (:id db))))
-
-(re-frame/reg-sub
-  :is-dragging
-  (fn [db]
-    (:is-dragging db)))
-
-(re-frame/reg-sub
-  :tiles
-  (fn [db]
-    (vals (:tiles db))))
-
-(re-frame/reg-sub
-  :legend
-  (fn [db]
-    (vals (:legend db))))
-
-(re-frame/reg-sub
-  :selected-tile
-  (fn [{:keys [legend selected]}]
-    (or selected (first (vals legend)))))
+(re-frame/reg-sub :saved-boards #(vals (:saved-boards %)))
+(re-frame/reg-sub :is-dragging :is-draging)
+(re-frame/reg-sub :tiles #(vals (:tiles %)))
+(re-frame/reg-sub :legend #(vals (:legend %)))
+(re-frame/reg-sub :selected-tile get-selected-legend-tile)
