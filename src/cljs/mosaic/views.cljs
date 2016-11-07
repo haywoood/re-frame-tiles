@@ -1,7 +1,8 @@
 (ns mosaic.views
     (:require [re-frame.core :as re-frame]))
 
-(def BOARD_WIDTH (* 23 19))
+(def ^:const BOARD_WIDTH (* 23 19))
+(def ^:const BLUE "#0469bd")
 
 (defn tile
   ([_tile] [tile _tile (fn [])])
@@ -68,24 +69,43 @@
                :onClick #(re-frame/dispatch-sync [:clear-board])}
           "clear"]]))
 
+(defn preview-text
+  [id]
+  (let [board-preview-id (re-frame/subscribe [:board-preview-id])]
+    (fn []
+      (if (= @board-preview-id id)
+        [:div {:style {:color "orange" :marginLeft 20}} "previewing"]
+        [:div ""]))))
+
+(defn saved-board
+  [{:keys [id board name]}]
+  ^{:key id}
+  [:div {:style {:display "flex" :width BOARD_WIDTH :marginBottom 10}}
+    [:div {:style {:flex 1 :display "flex"}
+           :onMouseOver #(re-frame/dispatch [:preview-saved-board id])
+           :onMouseOut #(re-frame/dispatch [:remove-preview-saved-board])}
+      name
+      [preview-text id]]
+    [:button {:onClick #(re-frame/dispatch [:load-saved-board id])
+              :className "hand-on-hover"}
+      "LOAD"]
+    [:button {:onClick #(re-frame/dispatch [:delete-saved-board id])
+              :className "hand-on-hover"
+              :style {:color "red"}}
+      "DELETE"]])
+
 (defn saved-boards []
   (let [boards (re-frame/subscribe [:saved-boards])]
     (fn []
-      [:div (map
-             (fn [{:keys [id name board]}]
-               ^{:key id}
-               [:div name
-                 [:div {:onClick #(re-frame/dispatch [:delete-saved-board id])
-                        :style {:color "red"}}
-                   "x"]])
-             @boards)])))
-
-
+      [:div {:style {:marginTop 40 :color BLUE}}
+        "Saved boards"
+        [:hr]
+        (map saved-board @boards)])))
 
 (defn spacer [amount] [:div {:style {:height amount}}])
 
 (defn main-panel []
-  (let [clear-interval 1];(js/setInterval #(re-frame/dispatch [:save-state]) 1000)]
+  (let [clear-interval (js/setInterval #(re-frame/dispatch [:save-state]) 1000)]
     [:div {:style {:display "flex" :flexDirection "column" :flex 1
                    :alignItems "center"}}
      [spacer 20]

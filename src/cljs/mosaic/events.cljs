@@ -14,25 +14,24 @@
   (fn [{:keys [db]} [_]]
     {:save-db db}))
 
-(re-frame/reg-event-fx
+(re-frame/reg-event-db
   :save-board
-  (fn [world [_]]
-    (let [db (:db world)
-          board-name (js/prompt "input a board name")
+  (fn [db [_]]
+    (let [board-name (js/prompt "input a board name")
           id (uuid/uuid-string (uuid/make-random-uuid))
-          board (get-in world [:db :tiles])
+          board (:tiles db)
           new-db (update db :saved-boards
                    #(assoc % id {:id id :name board-name :board board}))]
-      { :db new-db
-        :save-db new-db})))
+      new-db)))
 
-(re-frame/reg-event-fx
+(re-frame/reg-event-db
   :delete-saved-board
-  (fn [world [_ id]]
-    (let [db (:db world)
-          new-db (update db :saved-boards #(dissoc % id))]
-      {:db new-db
-       :save-db new-db})))
+  (fn [db [_ id]]
+    (let [confirm? (js/confirm "Delete?")
+          new-db (if confirm?
+                   (update db :saved-boards #(dissoc % id))
+                   db)]
+      new-db)))
 
 (defn toggle-dragging [db]
   (update db :is-dragging not))
@@ -70,3 +69,17 @@
 (re-frame/reg-event-db :select-legend-tile
   (fn [db [_ tile]]
     (assoc db :selected-tile tile)))
+
+(re-frame/reg-event-db
+  :load-saved-board
+  (fn [db [_ id]]
+    (let [board (get-in db [:saved-boards id :board])]
+      (assoc db :tiles board))))
+
+(re-frame/reg-event-db :preview-saved-board
+  (fn [db [_ id]]
+    (assoc db :board-preview-id id)))
+
+(re-frame/reg-event-db :remove-preview-saved-board
+  (fn [db [_]]
+    (assoc db :board-preview-id nil)))

@@ -24,7 +24,7 @@
 (def default-tile {:color "red" :background-color "white"})
 
 (defn make-tile [acc opts]
-  (let [id (uuid/make-random-uuid)
+  (let [id (uuid/uuid-string (uuid/make-random-uuid))
         tile (merge opts {:id id})]
     (assoc acc id tile)))
 
@@ -44,5 +44,6 @@
                  :selected-tile nil
                  :local-storage (.getTime (js/Date.))
                  :is-dragging false
+                 :board-preview-id nil
                  :saved-boards {}
                  :legend (reduce make-tile {} colors)})
