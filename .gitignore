@@ -1,9 +1,10 @@
 /*.log
 /target
 /*-init.clj
-/resources/public/js/compiled
+/resources/public/js/
 out
 mosaic.iml
 .idea/
 .git
 figwheel_server.log
+.lein-repl-history
