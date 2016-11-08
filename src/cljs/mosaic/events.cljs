@@ -1,9 +1,10 @@
 (ns mosaic.events
     (:require [re-frame.core :as re-frame]
-              [re-frame.std-interceptors :refer [debug path]]
               [mosaic.db :refer [default-db default-board get-selected-legend-tile]]
               [cljs-uuid-utils.core :as uuid]
               [hodgepodge.core :as hp]))
+
+(defonce log (atom {}))
 
 (re-frame/reg-fx
   :save-db
@@ -58,7 +59,7 @@
     (toggle-dragging new-db)))
 
 (re-frame/reg-event-db :clear-board
-  [(path :tiles)]
+  [(re-frame/path :tiles)]
   (fn [_ _] default-board))
 
 (re-frame/reg-event-db :initialize-db
@@ -69,7 +70,12 @@
 (re-frame/reg-event-db :toggle-dragging toggle-dragging)
 
 (re-frame/reg-event-db :select-legend-tile
-  [(path :selected-tile)]
+  [(re-frame/path :selected-tile)
+   (re-frame/->interceptor
+     :id :swap-log
+     :after (fn [context]
+              (reset! log context)
+              context))]
   (fn [_ [_ tile]] tile))
 
 (re-frame/reg-event-db :load-saved-board
@@ -78,9 +84,9 @@
       (assoc db :tiles board))))
 
 (re-frame/reg-event-db :preview-saved-board
-  [(path :board-preview-id)]
+  [(re-frame/path :board-preview-id)]
   (fn [_ [_ id]] id))
 
 (re-frame/reg-event-db :remove-preview-saved-board
-  [(path :board-preview-id)]
+  [(re-frame/path :board-preview-id)]
   (fn [_ _] nil))
