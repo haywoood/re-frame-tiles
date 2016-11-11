@@ -22,7 +22,7 @@
              {:background-color "#e04696" :color "#9c2c4b"}])
 
 (def default-tile {:color "red" :background-color "white"})
-(def fuck "sdlkfjasdf")
+
 (defn make-tile [acc opts]
   (let [id (uuid/uuid-string (uuid/make-random-uuid))
         tile (merge opts {:id id})]
