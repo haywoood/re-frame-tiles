@@ -1,6 +1,5 @@
 (ns mosaic.db
-  (:require [re-frame.core :as re-frame]
-            [cljs-uuid-utils.core :as uuid]))
+  (:require [cljs-uuid-utils.core :as uuid]))
 
 (def colors [{:background-color "#444"    :color "white"}
              {:background-color "blue"    :color "white"}
